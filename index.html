@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Happy Valentine's Day, My Love ❤️</title>
+  <style>
+    * { box-sizing: border-box; }
+    
+    body { 
+      margin: 0; 
+      padding: 20px; 
+      font-family: 'Arial, sans-serif'; 
+      background: linear-gradient(45deg, #ff6b9d, #c44569, #f8b500); 
+      min-height: 100vh; 
+      overflow-x: hidden;
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      justify-content: center; 
+      color: white; 
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.5); 
+      touch-action: manipulation;
+    }
+    
+    .container {
+      max-width: 500px;
+      width: 100%;
+      text-align: center;
+      position: relative;
+      z-index: 10;
+    }
+    
+    h1 { 
+      font-size: clamp(1.8em, 5vw, 3em); 
+      margin-bottom: 20px; 
+      animation: pulse 2s infinite; 
+    }
+    
+    @keyframes pulse { 
+      0% { transform: scale(1); } 
+      50% { transform: scale(1.05); } 
+      100% { transform: scale(1); } 
+    }
+    
+    .proposal { 
+      font-size: clamp(1.2em, 4vw, 2em); 
+      margin-bottom: 30px; 
+      line-height: 1.4;
+    }
+    
+    .buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      align-items: center;
+    }
+    
+    .yes-btn, .no-btn { 
+      background: #ff4757; 
+      color: white; 
+      border: none; 
+      padding: 15px 30px; 
+      font-size: clamp(1em, 3vw, 1.2em); 
+      border-radius: 50px; 
+      cursor: pointer; 
+      box-shadow: 0 8px 25px rgba(0,0,0,0.3); 
+      transition: all 0.3s ease; 
+      min-width: 120px;
+      user-select: none;
+      touch-action: manipulation;
+    }
+    
+    .yes-btn {
+      background: linear-gradient(45deg, #00b894, #00cec9);
+    }
+    
+    .yes-btn:hover, .no-btn:hover { 
+      transform: scale(1.05) translateY(-3px); 
+      box-shadow: 0 12px 30px rgba(0,0,0,0.4); 
+    }
+    
+    .yes-btn:active, .no-btn:active {
+      transform: scale(0.98);
+    }
+    
+    .taunt { 
+      font-size: clamp(1em, 3vw, 1.5em); 
+      margin-top: 20px; 
+      opacity: 0; 
+      transition: all 0.5s ease; 
+      color: #ffd700; 
+      font-weight: bold; 
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.7); 
+      transform: translateY(20px);
+    }
+    
+    .taunt.show { 
+      opacity: 1; 
+      transform: translateY(0) scale(1.05); 
+    }
+    
+    .hearts { 
+      position: fixed; 
+      top: 0; 
+      left: 0; 
+      width: 100%; 
+      height: 100%; 
+      pointer-events: none; 
+      z-index: 1; 
+    }
+    
+    .heart { 
+      position: absolute; 
+      font-size: clamp(20px, 4vw, 30px); 
+      color: #ff69b4; 
+      animation: float 6s infinite linear; 
+      transition: transform 0.2s; 
+    }
+    
+    @keyframes float { 
+      0% { transform: translateY(100vh) rotate(0deg); opacity: 1; } 
+      100% { transform: translateY(-100px) rotate(360deg); opacity: 0; } 
+    }
+    
+    .message { 
+      font-size: clamp(1.2em, 3.5vw, 1.5em); 
+      opacity: 0; 
+      transition: opacity 1s ease; 
+      margin-top: 20px; 
+      line-height: 1.5;
+    }
+    
+    .show { opacity: 1; }
+    
+    #confetti { 
+      position: fixed; 
+      top: 0; 
+      left: 0; 
+      width: 100%; 
+      height: 100%; 
+      pointer-events: none; 
+      z-index: 20; 
+    }
+    
+    .success { 
+      background: linear-gradient(45deg, #00b894, #00cec9) !important; 
+      font-size: clamp(1.1em, 3.5vw, 1.5em) !important; 
+      animation: bounce 1s infinite; 
+    }
+    
+    @keyframes bounce { 
+      0%, 20%, 50%, 80%, 100% { transform: translateY(0) scale(1); } 
+      40% { transform: translateY(-10px) scale(1.05); } 
+      60% { transform: translateY(-5px) scale(1.03); } 
+    }
+    
+    .no-explosion {
+      position: fixed;
+      pointer-events: none;
+      z-index: 15;
+      font-size: 24px;
+      animation: explodeOut 1s ease-out forwards;
+    }
+    
+    @keyframes explodeOut {
+      0% { transform: scale(0) rotate(0deg); opacity: 1; }
+      50% { transform: scale(1.5) rotate(180deg); opacity: 1; }
+      100% { transform: scale(0) rotate(720deg); opacity: 0; }
+    }
+    
+    @media (max-width: 480px) {
+      body { padding: 15px; }
+      .buttons { gap: 12px; }
+      .yes-btn, .no-btn { padding: 12px 24px; min-width: 100px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="hearts" id="hearts"></div>
+  <div id="confetti"></div>
+  
+  <div class="container">
+    <h1>Happy Valentine's Day, Baby! ❤️</h1>
+    <div class="proposal">Will you be mine... my babylaloves? 💕</div>
+    
+    <div class="buttons">
+      <button class="yes-btn" onclick="sayYes()">Yes 😍</button>
+      <button class="no-btn" id="noBtn" onclick="sayNo()">No 😢</button>
+    </div>
+    
+    <div class="taunt" id="taunt1">C'mon babyyyy... you know the answer poooo 💕</div>
+    <div class="taunt" id="taunt2">Still pretending, ha? 😏</div>
+    <div class="taunt" id="taunt3">BABEE HMPPPP! 😤</div>
+    <div class="taunt" id="taunt4">YES NAAA IKAW WALA KA CHOICE :((( 💖</div>
+    
+    <div class="message" id="message">
+      YAYYYYYYYYYY! 💖 OPEN IT!! <br>
+      <a href="love-letter.html" style="color: gold; font-size: clamp(1.1em, 3vw, 1.3em); text-decoration: none; font-weight: bold;">✨ Open my love letter for you...</a>
+    </div>
+  </div>
+
+  <script>
+    let noClicks = 0;
+    const taunts = [
+      "C'mon babyyyy... you know the answer poooo 💕",
+      "Still pretending, ha? 😏", 
+      "BABEE HMPPPP! 😤",
+      "YES NAAA IKAW WALA KA CHOICE :((( 💖"
+    ];
+    
+    function createHeart() {
+      const heart = document.createElement('div');
+      heart.className = 'heart';
+      heart.innerHTML = ['💖','💕','❤️','💗'][Math.floor(Math.random()*4)];
+      heart.style.left = Math.random() * 100 + '%';
+      heart.style.animationDuration = (Math.random() * 3 + 4) + 's';
+      document.getElementById('hearts').appendChild(heart);
+      setTimeout(() => heart.remove(), 7000);
+    }
+    setInterval(createHeart, 400);
+
+    function explodeConfetti(centerX = window.innerWidth/2, centerY = window.innerHeight/2) {
+      for (let i = 0; i < 25; i++) {
+        const conf = document.createElement('div');
+        conf.innerHTML = ['❤️', '💕', '💖', '💗', '✨','🌟'][Math.floor(Math.random()*6)];
+        conf.style.cssText = `
+          position: fixed; 
+          left: ${centerX}px; 
+          top: ${centerY}px; 
+          font-size: ${Math.random() * 20 + 12}px; 
+          pointer-events: none; 
+          z-index: 25;
+          animation: explodeOut 1.5s ease-out forwards;
+        `;
+        document.body.appendChild(conf);
+        setTimeout(() => conf.remove(), 1500);
+      }
+    }
+
+    function createNoExplosion(x, y, text) {
+      const explosion = document.createElement('div');
+      explosion.className = 'no-explosion';
+      explosion.textContent = text;
+      explosion.style.left = x + 'px';
+      explosion.style.top = y + 'px';
+      document.body.appendChild(explosion);
+      setTimeout(() => explosion.remove(), 1000);
+    }
+
+    function sayYes() {
+      document.getElementById('message').classList.add('show');
+      document.getElementById('noBtn').style.display = 'none';
+      document.querySelector('.yes-btn').classList.add('success');
+      
+      // Celebration
+      setTimeout(() => {
+        for (let i = 0; i < 8; i++) {
+          setTimeout(() => explodeConfetti(), i * 200);
+        }
+        setTimeout(() => {
+          window.location.href = 'love-letter.html';
+        }, 3000);
+      }, 500);
+    }
+
+    function sayNo() {
+      noClicks++;
+      const yesBtn = document.querySelector('.yes-btn');
+      const noBtn = document.getElementById('noBtn');
+      
+      // Make YES button grow and glow
+      const scale = 1 + (noClicks * 0.25);
+      yesBtn.style.transform = `scale(${scale})`;
+      yesBtn.style.boxShadow = `0 0 ${20 + noClicks*10}px rgba(0,184,148,0.6)`;
+      
+      // NO button runs away uniquely
+      const rect = noBtn.getBoundingClientRect();
+      const x = rect.left + rect.width/2;
+      const y = rect.top + rect.height/2;
+      
+      // Create explosion at NO button position
+      const noTexts = ['😏', '💔', '🤭', '😤', '💕'];
+      createNoExplosion(x, y, noTexts[noClicks % noTexts.length]);
+      
+      // Move NO button chaotically
+      noBtn.style.transition = 'all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
+      noBtn.style.transform = `
+        translateX(${ (Math.sin(noClicks * 0.8) * 150) }px) 
+        translateY(${ (Math.cos(noClicks * 0.5) * 80) }px)
+        rotate(${ (noClicks * 15 - 30) }deg) 
+        scale(${1 - noClicks * 0.05})
+      `;
+      
+      // Show taunts
+      if (noClicks <= 4) {
+        const taunt = document.getElementById(`taunt${noClicks}`);
+        taunt.classList.add('show');
+        setTimeout(() => taunt.classList.remove('show'), 2500);
+      }
+      
+      // Special effects
+      if (noClicks === 2) {
+        for (let i = 0; i < 20; i++) {
+          setTimeout(() => createHeart(), i * 80);
+        }
+      }
+      
+      if (noClicks >= 5) {
+        // NO button gets smaller and harder to click
+        noBtn.style.fontSize = `${1.2 - (noClicks-4)*0.1}em`;
+        noBtn.innerHTML = 'Nooo... 😭';
+      }
+      
+      // Reset button position smoothly
+      setTimeout(() => {
+        noBtn.style.transition = 'all 0.4s ease';
+        noBtn.style.transform = 'translateX(0) translateY(0) rotate(0deg) scale(1)';
+      }, 600);
+    }
+  </script>
+</body>
+</html>

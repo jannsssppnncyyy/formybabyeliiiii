@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Love Letter to You ❤️</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { 
+      font-family: 'Georgia', serif; 
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+      min-height: 200vh; color: #333; line-height: 1.8; 
+      overflow-x: hidden; padding: 20px 15px;
+    }
+
+    /* TINY SIDE PHOTOS - MOBILE SAFE */
+    .instax-photo {
+      position: fixed; z-index: 20; width: clamp(60px, 14vw, 90px); 
+      height: clamp(70px, 17vw, 105px); border: 4px solid #f8f8f8; 
+      border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      object-fit: cover; cursor: pointer; transition: all 0.4s ease;
+      opacity: 0; pointer-events: none;
+    }
+    .instax-photo.show { opacity: 1; animation: instaxPop 0.8s ease-out; pointer-events: auto; }
+    .instax-photo:hover { transform: scale(1.1) rotate(5deg); }
+    @keyframes instaxPop { 
+      0% { opacity: 0; transform: translateY(15px) scale(0.8); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* MOBILE SIDE POSITIONS */
+    #photo1 { top: 10vh; left: 2vw; transform: rotate(-2deg); }
+    #photo2 { top: 30vh; right: 3vw; transform: rotate(2deg); }
+    #photo3 { top: 60vh; left: 2vw; transform: rotate(-1deg); }
+    #photo4 { top: 85vh; right: 3vw; transform: rotate(1deg); }
+
+    /* Envelope */
+    .envelope {
+      position: fixed; top: 15px; right: 15px; width: clamp(50px, 12vw, 70px); 
+      height: clamp(40px, 9vw, 55px); background: #ff6b9d; 
+      transform: rotate(-5deg); cursor: pointer; z-index: 100;
+      transition: transform 0.3s; box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+    }
+    .envelope:hover { transform: rotate(0deg) scale(1.1); }
+    .envelope::before { 
+      content: ''; position: absolute; top: 0; left: 0; right: 0; 
+      height: clamp(18px, 4vw, 25px);
+      border-left: clamp(25px, 7vw, 35px) solid #ff4757; 
+      border-right: clamp(25px, 7vw, 35px) solid #ff4757; 
+      border-top: clamp(18px, 4vw, 25px) solid transparent; 
+    }
+
+    /* Envelope Gallery */
+    .envelope-gallery {
+      position: fixed; right: 10px; top: 80px; width: clamp(180px, 85vw, 220px); 
+      z-index: 110; display: none; background: rgba(255,255,255,0.95); 
+      padding: 15px; border-radius: 15px; box-shadow: 0 15px 50px rgba(0,0,0,0.3);
+      max-height: 65vh; overflow-y: auto; backdrop-filter: blur(10px);
+    }
+    .envelope-gallery.show { display: block; animation: slideInRight 0.6s ease-out; }
+    @keyframes slideInRight { 0% { opacity: 0; transform: translateX(100px); } 100% { opacity: 1; transform: translateX(0); } }
+    .gallery-photo {
+      width: 100%; height: clamp(100px, 25vw, 140px); margin-bottom: 12px; 
+      border: 6px solid #f8f8f8; border-radius: 10px; object-fit: cover; 
+      cursor: pointer; transition: all 0.3s; box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+    }
+    .gallery-photo:hover { transform: scale(1.03); box-shadow: 0 12px 35px rgba(0,0,0,0.3); }
+    .gallery-close {
+      position: absolute; top: -8px; right: -8px; background: #ff4757; color: white;
+      border: none; border-radius: 50%; width: 28px; height: 28px; cursor: pointer;
+      font-size: 0.9em; z-index: 120;
+    }
+
+    /* COMPACT PHOTO MODAL */
+    .photo-modal {
+      display: none; position: fixed; z-index: 160; width: clamp(280px, 85vw, 500px); 
+      height: clamp(350px, 70vh, 600px); top: 50%; left: 50%; 
+      transform: translate(-50%, -50%); border: 12px solid #f8f8f8; 
+      border-radius: 20px; box-shadow: 0 30px 80px rgba(0,0,0,0.6); 
+      object-fit: contain; cursor: pointer;
+    }
+    .photo-modal.show { display: block; animation: photoZoom 0.5s ease-out; }
+    @keyframes photoZoom { 0% { opacity: 0; transform: translate(-50%, -50%) scale(0.3); } 100% { opacity: 1; transform: translate(-50%, -50%) scale(1); } }
+
+    .photo-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 155; }
+    .close-modal { position: fixed; top: 15px; right: 15px; background: #ff4757; color: white; border: none; padding: 8px 18px; border-radius: 25px; cursor: pointer; z-index: 260; font-size: 1em; font-family: inherit; box-shadow: 0 4px 12px rgba(0,0,0,0.3); display: none; }
+
+    /* COMPACT LANDSCAPE SPOTIFY - SMALL & SAFE */
+    .spotify-container {
+      display: none; position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%);
+      z-index: 200; width: clamp(280px, 80vw, 420px); height: 140px; 
+      background: rgba(255,255,255,0.95); border-radius: 15px; padding: 12px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.4); backdrop-filter: blur(12px);
+    }
+    .spotify-container.show { display: block; animation: slideUp 0.5s ease-out; }
+    @keyframes slideUp { 0% { opacity: 0; transform: translateX(-50%) translateY(40px); } 100% { opacity: 1; transform: translateX(-50%) translateY(0); } }
+    .spotify-title { text-align: center; color: #c44569; font-size: clamp(0.9em, 3.5vw, 1.1em); font-weight: bold; margin-bottom: 8px; }
+
+    /* COMPRESSED CENTERED LETTER */
+    .letter {
+      max-width: clamp(300px, 75vw, 550px); margin: 0 auto; 
+      background: rgba(255,255,255,0.95); box-shadow: 0 25px 70px rgba(0,0,0,0.25); 
+      border-radius: 20px; padding: clamp(25px, 6vw, 45px) clamp(20px, 5vw, 40px); 
+      font-size: clamp(1em, 2.8vw, 1.3em); z-index: 10;
+      text-align: center; /* CENTERED TEXT */
+    }
+
+    .paragraph {
+      margin-bottom: clamp(25px, 6vw, 40px); padding: clamp(18px, 5vw, 25px); 
+      background: linear-gradient(45deg, rgba(255,107,157,0.08), rgba(255,182,193,0.08));
+      border-left: 4px solid #ff6b9d; border-radius: 12px; opacity: 0; 
+      transform: translateY(30px); transition: all 1s ease; text-align: left;
+    }
+    .paragraph.show { opacity: 1; transform: translateY(0); }
+
+    .opening, .closing {
+      font-size: clamp(1.4em, 5vw, 2em); color: #c44569; margin-bottom: clamp(15px, 5vw, 25px); 
+      font-weight: bold; text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    @keyframes floatUp { to { transform: translateY(-100vh) rotate(360deg); opacity: 0; } }
+
+    /* MOBILE PERFECT */
+    @media (max-width: 480px) {
+      body { padding: 15px 8px; }
+      .instax-photo { width: clamp(45px, 12vw, 70px); height: clamp(55px, 15vw, 85px); }
+      .letter { padding: 20px 15px; font-size: clamp(0.95em, 3.5vw, 1.2em); }
+      .paragraph { padding: 15px; margin-bottom: 25px; }
+      .spotify-container { width: clamp(260px, 92vw, 380px); height: 120px; padding: 10px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- TINY SIDE PHOTOS -->
+  <img src="img/Picture 1.jpg" class="instax-photo" id="photo1" data-spotify="spotify1" alt="💕">
+  <img src="img/Picture 2.jpg" class="instax-photo" id="photo2" data-spotify="spotify2" alt="💖">
+  <img src="img/Picture 3.jpg" class="instax-photo" id="photo3" data-spotify="spotify3" alt="🌹">
+  <img src="img/Picture 4.jpg" class="instax-photo" id="photo4" data-spotify="spotify4" alt="💍">
+
+  <!-- ALL MODALS & PLAYERS -->
+  <img id="modal1" class="photo-modal" src="img/Picture 1.jpg">
+  <img id="modal2" class="photo-modal" src="img/Picture 2.jpg">
+  <img id="modal3" class="photo-modal" src="img/Picture 3.jpg">
+  <img id="modal4" class="photo-modal" src="img/Picture 4.jpg">
+  <div class="photo-overlay" id="photoOverlay"></div>
+  <button class="close-modal" id="closeModal" onclick="closePhotoModal()">✨ Close</button>
+
+  <div class="spotify-container" id="spotify1">
+    <div class="spotify-title">💕 Dear you, mrld</div>
+    <iframe style="border-radius:10px" src="https://open.spotify.com/embed/track/7jopTY1OybUG9lV4CZea2D?utm_source=generator" width="100%" height="100" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media"></iframe>
+  </div>
+  <div class="spotify-container" id="spotify2">
+    <div class="spotify-title">💖 Panaginip by Nicole</div>
+    <iframe style="border-radius:10px" src="https://open.spotify.com/embed/track/6wcjLOGIdmw8BUaRho4c9L?utm_source=generator" width="100%" height="100" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media"></iframe>
+  </div>
+  <div class="spotify-container" id="spotify3">
+    <div class="spotify-title">🌹 Who Knows by Daniel Caesar</div>
+    <iframe style="border-radius:10px" src="https://open.spotify.com/embed/track/6DH13QYXK7lKkYHSU88N48?utm_source=generator" width="100%" height="100" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media"></iframe>
+  </div>
+  <div class="spotify-container" id="spotify4">
+    <div class="spotify-title">💍 hold me, never let me go</div>
+    <iframe style="border-radius:10px" src="https://open.spotify.com/embed/track/6JfcUgZqHbb20KTfHayS9j?utm_source=generator" width="100%" height="100" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media"></iframe>
+  </div>
+
+  <!-- ENVELOPE & GALLERY -->
+  <div class="envelope-gallery" id="envelopeGallery">
+    <button class="gallery-close" onclick="closeEnvelopeGallery()">✨</button>
+    <img src="img/Picture 1.jpg" class="gallery-photo" onclick="showFloatingPhoto('photo1', 'spotify1')" alt="💕">
+    <img src="img/Picture 2.jpg" class="gallery-photo" onclick="showFloatingPhoto('photo2', 'spotify2')" alt="💖">
+    <img src="img/Picture 3.jpg" class="gallery-photo" onclick="showFloatingPhoto('photo3', 'spotify3')" alt="🌹">
+    <img src="img/Picture 4.jpg" class="gallery-photo" onclick="showFloatingPhoto('photo4', 'spotify4')" alt="💍">
+  </div>
+  <div class="envelope" onclick="openEnvelope()"></div>
+
+  <!-- COMPRESSED CENTERED LETTER -->
+  <div class="letter">
+    <div class="opening">💌 My Darling, My Everything 💌</div>
+    
+    <div class="paragraph" id="para1">
+      To: My Baby Eliiiii <br><br>
+      Hi babyyyy, This is the first time I've ever done something like this for a girl, so you're so special to me pooo. Honestly, when we first start talking I would've never imagined we'd become this close. Like, there was a point where we were complete strangers and now you're a part of my every day life. Baby you know, somewhere between the normal conversation and quiet moments, your presence to me started to feel different and now I don't know what I'd do if I ever lost you.
+    </div>
+    
+    <div class="paragraph" id="para2">
+      I hope you're doing well. Whenever you need me, know that I'll always be there for you. I wish you a happy life, with or without me po I truly want nothing but the best for you. Falling in love with you was my best decision i've ever made, hindi ko plinano but kasama na ikaw sa plano ko habang buhay. You're the only one I want, the only heart I need. Through everything, I'll choose you again and again. No matter what comes out way, I'll be right here, loving you endlessly. You're my forever, I love you today, I love you tomorrow, I love you forever my baby!!!!
+    </div>
+    
+    <div class="paragraph" id="para3">
+      Maybe I can't promise you a perfect relationship but I can promise you is that as long as we're trying, I'm staying. Always remember that I'm always here no matter what happens kakampi mo ako sa lahat. Don't pressure yourself too much baby. I'm so proud of you, I appreciate everything you do, keep doing your best. I'll be always here for you po baby. Be strong, Okay?? With all the love in my universe, Happy Valentine's Day, My beautiful forever. 💍❤️
+    </div>
+    
+    <div class="closing">Forever Yours, Spencyyyy :)))</div>
+  </div>
+
+  <script>
+    function pauseAllSpotify() {
+      document.querySelectorAll('iframe[src*="spotify.com"]').forEach(iframe => {
+        try { iframe.contentWindow.postMessage({ command: 'pause' }, '*'); } catch(e) {}
+      });
+    }
+
+    window.addEventListener('scroll', () => {
+      document.querySelectorAll('.paragraph').forEach(el => {
+        if (el.getBoundingClientRect().top < window.innerHeight * 0.75) el.classList.add('show');
+      });
+      document.querySelectorAll('.instax-photo').forEach(el => {
+        if (el.getBoundingClientRect().top < window.innerHeight * 0.9) el.classList.add('show');
+      });
+    });
+
+    document.querySelectorAll('.instax-photo').forEach(photo => {
+      photo.addEventListener('click', function(e) {
+        if (this.classList.contains('show')) {
+          e.preventDefault(); e.stopPropagation();
+          const spotifyId = this.getAttribute('data-spotify');
+          const photoNum = this.id.replace('photo', '');
+          showPhotoWithSpotify(photoNum, spotifyId);
+        }
+      });
+    });
+
+    window.showFloatingPhoto = function(photoId, spotifyId) {
+      const photoNum = photoId.replace('photo', '');
+      showPhotoWithSpotify(photoNum, spotifyId);
+    }
+
+    function showPhotoWithSpotify(photoNum, spotifyId) {
+      document.querySelectorAll('.photo-modal, .spotify-container').forEach(el => el.classList.remove('show'));
+      pauseAllSpotify();
+      document.getElementById('modal' + photoNum)?.classList.add('show');
+      document.getElementById('photoOverlay').style.display = 'block';
+      document.getElementById('closeModal').style.display = 'block';
+      document.getElementById(spotifyId).classList.add('show');
+    }
+
+    function closePhotoModal() {
+      pauseAllSpotify();
+      document.querySelectorAll('.photo-modal, .spotify-container').forEach(el => el.classList.remove('show'));
+      document.getElementById('photoOverlay').style.display = 'none';
+      document.getElementById('closeModal').style.display = 'none';
+    }
+
+    window.openEnvelope = function() {
+      document.getElementById('envelopeGallery').classList.add('show');
+      for (let i = 0; i < 60; i++) setTimeout(() => createFloatingHeart(), i * 25);
+    }
+    window.closeEnvelopeGallery = function() { document.getElementById('envelopeGallery').classList.remove('show'); }
+
+    function createFloatingHeart() {
+      const heart = document.createElement('div');
+      heart.innerHTML = ['💖','💕','❤️','💗','💝','🦋'][Math.floor(Math.random()*6)];
+      heart.style.cssText = `position: fixed; left: ${85 + Math.random()*10}vw; top: ${25 + Math.random()*10}vh; font-size: ${Math.random()*30+15}px; pointer-events: none; animation: floatUp 4s ease-out forwards; z-index: 99;`;
+      document.body.appendChild(heart); setTimeout(() => heart.remove(), 4000);
+    }
+
+    setTimeout(() => window.scrollBy(0, 1), 600);
+  </script>
+</body>
+</html>
